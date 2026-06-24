@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Her Sakura Paradise ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- CORE CONFIG & SAKURA THEME --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            color: #4a4a4a;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            background-color: #fff0f5;
+        }
+
+        /* --- BACKGROUND PHOTO BLUR --- */
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://picsum.photos/1920/1080?sakura'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: blur(12px) brightness(0.95);
+            transform: scale(1.1);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .background-tint {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 182, 193, 0.4), rgba(255, 240, 245, 0.3));
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* --- ADVANCED RAIN EMOTICON SYSTEM (Paling Atas) --- */
+        .rain-emoji {
+            position: fixed;
+            top: -50px;
+            pointer-events: none;
+            z-index: 2;
+            user-select: none;
+            opacity: 0.65;
+            animation: emojiRainfall linear forwards;
+        }
+
+        @keyframes emojiRainfall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- SAKURA & EMOTICON FLOWERS TRAIL --- */
+        .emoji-trail {
+            position: fixed;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 9999;
+            user-select: none;
+            animation: flyAway 1.2s forwards ease-out;
+        }
+
+        @keyframes flyAway {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: translate(60px, -120px) scale(0.5) rotate(180deg); }
+        }
+
+        /* --- MINI FIREWORKS PARTICLES --- */
+        .fw-particle {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999;
+            animation: fireworkExplode 0.6s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+
+        @keyframes fireworkExplode {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(calc(var(--x) * 1px), calc(var(--y) * 1px)) scale(0); opacity: 0; }
+        }
+
+        .flip-sparkle {
+            position: fixed;
+            font-size: 20px;
+            pointer-events: none;
+            z-index: 999;
+            animation: sparklePop 0.8s forwards ease-out;
+        }
+
+        @keyframes sparklePop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)) scale(1.3); opacity: 0; }
+        }
+
+        /* --- SECTIONS --- */
+        .section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transform: scale(0.97);
+            pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            z-index: 3;
+        }
+
+        .section.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+            position: relative;
+        }
+
+        /* --- GLASSMORPHISM CARD --- */
+        .card {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 40px 25px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 15px 35px rgba(255, 105, 180, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            color: #ff477e;
+            font-family: 'Georgia', serif;
+            line-height: 1.3;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff9ebb, #ffccd5);
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+            border: none;
+            padding: 14px 36px;
+            font-size: 0.95rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 158, 187, 0.3);
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 158, 187, 0.5);
+        }
+
+        /* --- COUNTDOWN DESIGN --- */
+        .simple-countdown {
+            position: relative;
+            display: inline-block;
+            font-size: 1.45rem;
+            font-weight: bold;
+            color: #ff477e;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px 26px;
+            border-radius: 50px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(255, 71, 126, 0.1);
+            letter-spacing: 0.5px;
+        }
+
+        /* --- AESTHETIC GIFT BOX & BLOW-UP ANIMATION --- */
+        .gift-box {
+            font-size: 5rem;
+            cursor: pointer;
+            margin: 20px 0;
+            display: inline-block;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        /* Animasi khusus saat hitung mundur selesai (Membesar & Terbuka) */
+        .gift-box.open-explode {
+            animation: giftOpenExplode 0.7s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        @keyframes giftOpenExplode {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.6) rotate(-10deg); filter: brightness(1.2); }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+
+        .aesthetic-timer-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            margin-top: 10px;
+        }
+
+        .aesthetic-timer-box.show {
+            opacity: 1;
+            max-height: 120px;
+        }
+
+        .timer-circle {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ff477e;
+            background: rgba(255, 255, 255, 0.95);
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(255, 71, 126, 0.15);
+            border: 2px solid #ffccd5;
+            margin-bottom: 8px;
+        }
+
+        /* --- TYPING CONTAINER (KERAPIHAN ANTI-POTONG KATA & LEBIH KECIL) --- */
+        .typing-container {
+            text-align: justify;
+            max-height: 260px; 
+            width: 100%;
+            overflow-y: auto;
+            padding: 10px 12px; 
+            margin: 15px 0;
+            scroll-behavior: smooth;
+        }
+
+        /* FIXED: Menggunakan word-break & ukuran font diperkecil sedikit agar kata utuh ke bawah */
+        .typing-text {
+            font-family: 'Caveat', cursive;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: #4a5568;
+            padding-bottom: 30px;
+            word-break: keep-all; 
+            overflow-wrap: break-word; 
+        }
+
+        .note-emoji {
+            display: inline-block;
+            height: 1.25rem;
+            width: auto;
+            vertical-align: -2px;
+            margin: 0 3px;
+        }
+
+        .joy-char {
+            display: inline-block;
+            animation: joyBounce 0.35s ease forwards;
+        }
+
+        @keyframes joyBounce {
+            0% { transform: translateY(6px); opacity: 0; color: #ff477e; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* --- MEMORIES GRID --- */
+        .grid-memories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .polaroid-wrapper {
+            perspective: 1200px;
+            height: 190px;
+            position: relative;
+        }
+
+        .polaroid-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .polaroid-wrapper.magnified .polaroid-inner {
+            transform: scale(1.2) rotateY(180deg);
+        }
+
+        .polaroid-front, .polaroid-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 6px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            background: white;
+            padding: 8px;
+        }
+
+        .polaroid-front img {
+            width: 100%;
+            height: 125px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .polaroid-front p {
+            font-family: 'Caveat', cursive;
+            font-size: 1.2rem;
+            margin-top: 4px;
+            color: #ff7096;
+        }
+
+        .polaroid-back {
+            transform: rotateY(180deg);
+            background: #fff5f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px dashed #ffb7c5;
+            padding: 10px;
+        }
+
+        .polaroid-back p {
+            font-size: 0.8rem;
+            line-height: 1.4;
+            color: #d81b60;
+            font-weight: 600;
+        }
+
+        /* --- VIDEO CONTAINER --- */
+        .video-container {
+            margin: 15px 0;
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        iframe { width: 100%; aspect-ratio: 16/9; border: none; display: block; }
+
+        .music-ctrl {
+            position: fixed; bottom: 20px; right: 20px; z-index: 100;
+            background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer; font-size: 1.1rem;
+            width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
+        }
+        
+        @keyframes blink { 0% { opacity: 0.4; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <audio id="backsound" loop src="https://raw.githubusercontent.com/peopleinc77-gif/backsound-web/main/Selamat%20Ulang%20Tahun%20-%20Gellen%20Martadinata%20(Cover%20Winda%20Anggraeni).mp3"></audio>
+
+    <div class="music-ctrl" id="musicBtn" onclick="toggleMusic()">🎵</div>
+
+    <div class="background-overlay"></div>
+    <div class="background-tint"></div>
+
+    <section class="section active" id="page1">
+        <div class="card">
+            <p style="letter-spacing: 2px; font-size: 0.8rem; text-transform: uppercase; color: #ff7096; font-weight: bold;">🌸 COUNTDOWN 🌸</p>
+            <h1 style="margin-top: 6px;">Selamat Ulang Tahun</h1>
+            
+            <div class="simple-countdown" id="countdownDisplay">
+                00d : 00h : 00m : 00s
+            </div>
+
+            <button class="btn" onclick="navigateTo(2)">Buka ✨</button>
+        </div>
+    </section>
+
+    <section class="section" id="page2">
+        <div class="card">
+            <p style="letter-spacing: 2px; font-size: 0.8rem; text-transform: uppercase; color: #ff7096; font-weight: bold;">✨ Klik kadonya sayanggg ✨</p>
+            <div class="gift-box" id="mainGift" onclick="startAestheticCountdown()">🎁</div>
+            
+            <div class="aesthetic-timer-box" id="timerWrapper">
+                <div class="timer-circle" id="giftTimer">3</div>
+                <p style="font-size: 0.8rem; font-weight: 700; color: #ff7096; letter-spacing: 1px; text-transform: uppercase; animation: blink 0.8s infinite alternate;">Menyiapkan Surat...</p>
+            </div>
+            <p id="giftHint" style="font-size: 0.8rem; font-style: italic; color: #888; margin-top: 10px;">Hehehehe...</p>
+        </div>
+    </section>
+
+    <section class="section" id="page3">
+        <div class="card">
+            <h1>Happy Birthday, Sayangggku 🌸</h1>
+            <div class="typing-container" id="scrollBox">
+                <div id="typingArea" class="typing-text"></div>
+            </div>
+            <button class="btn" id="btnNextMemories" style="opacity:0; pointer-events:none; transition:0.5s;" onclick="navigateTo(4)">Our Memories 📸</button>
+        </div>
+    </section>
+
+    <section class="section" id="page4">
+        <div class="card">
+            <h1>Our Memories 📸</h1>
+            <p style="font-size:0.8rem; margin-bottom:15px; color:#ff7096; font-weight: bold;">✨ Klik fotonya, ada pesan rahasia</p>
+            
+            <div class="grid-memories">
+                <div class="polaroid-wrapper" onclick="handlePolaroidClick(this, event)">
+                    <div class="polaroid-inner">
+                        <div class="polaroid-front">
+                            <img src="https://raw.githubusercontent.com/peopleinc77-gif/Picture/refs/heads/main/IMG_2709.jpeg">
+                            <p>First Photo 📷</p>
+                        </div>
+                        <div class="polaroid-back">
+                            <p>"Foto ini jadi bukti di mana semuanya dimulai. Makasih ya udah jadi rumah tempat aku pulang dan teman hidup yang selalu ngertiin aku. Aku menyukai setiap detik yang kita lalui bareng sampai sekarang"</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="polaroid-wrapper" onclick="handlePolaroidClick(this, event)">
+                    <div class="polaroid-inner">
+                        <div class="polaroid-front">
+                            <img src="https://raw.githubusercontent.com/peopleinc77-gif/Picture/refs/heads/main/312ADA64-2F8B-4DB0-A0B4-5EE515BF7FC5.jpeg">
+                            <p>First Date 🌸</p>
+                        </div>
+                        <div class="polaroid-back">
+                            <p>"Cuma first date biasa, tapi buat aku ini adalah hari terbaik di hidup aku. Makasih ya sudah jadi orang yang bikin aku ngerasa beruntung setiap harinya"</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="polaroid-wrapper" onclick="handlePolaroidClick(this, event)">
+                    <div class="polaroid-inner">
+                        <div class="polaroid-front">
+                            <img src="https://raw.githubusercontent.com/peopleinc77-gif/Picture/refs/heads/main/e91d87b3-31a1-4247-bd01-4942d7f18a29.jpeg">
+                            <p>Cantik Bangetttt 🥰</p>
+                        </div>
+                        <div class="polaroid-back">
+                            <p>"pas aku ngefotoin kamu ini, aku bersyukur karena takdir udah mempertemukan kita. Makasih ya udah mau jadi teman hidup aku selamanya"</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="polaroid-wrapper" onclick="handlePolaroidClick(this, event)">
+                    <div class="polaroid-inner">
+                        <div class="polaroid-front">
+                            <img src="https://raw.githubusercontent.com/peopleinc77-gif/Picture/refs/heads/main/1d6b9a82-c737-4ab2-94ed-f7118a229a0c.jpeg">
+                            <p>Aku Happy 😙</p>
+                        </div>
+                        <div class="polaroid-back">
+                            <p>"Terima kasih sudah selalu ada di saat suka maupun duka. Bersamamu semuanya menjadi terasa lebih mudah"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="navigateTo(5)">Recap Video Kita 🎥</button>
+        </div>
+    </section>
+
+    <section class="section" id="page5">
+        <div class="card">
+            <h1>Sekali lagi Selamat Ulang Tahun 🥰</h1>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+            </div>
+            <h2 style="font-size: 1.1rem; color: #ff477e; margin-top: 10px; font-weight: bold;">🩷💚❤️🩵🧡💛💙🖤🤍💜🤎</h2>
+            <button class="btn" onclick="navigateTo(1)">Ulang Dari Awal 🔄</button>
+        </div>
+    </section>
+
+    <script>
+        /* --- 1. SINKRONISASI HITUNG MUNDUR KE 4 JULI 2026 --- */
+        const targetDate = new Date("2026-07-04T00:00:00").getTime();
+        let lastSeconds = -1;
+
+        setInterval(function() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            
+            const d = Math.floor(distance / (1000*60*60*24));
+            const h = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
+            const m = Math.floor((distance % (1000*60*60)) / (1000*60));
+            const s = Math.floor((distance % (1000*60)) / 1000);
+
+            const displayBox = document.getElementById("countdownDisplay");
+            if(distance < 0) {
+                displayBox.innerText = "Happy Birthday!! 🌸";
+            } else {
+                displayBox.innerText = `${d}d : ${h}h : ${m}m : ${s}s`;
+            }
+
+            if (s !== lastSeconds) {
+                lastSeconds = s;
+                const rect = displayBox.getBoundingClientRect();
+                triggerFirework(rect.left - 20, rect.top + (rect.height / 2));
+                triggerFirework(rect.right + 20, rect.top + (rect.height / 2));
+            }
+        }, 1000);
+
+        function triggerFirework(posX, posY) {
+            const colors = ['#ff477e', '#ff7096', '#ffccd5', '#ffea00', '#00f5d4'];
+            for (let i = 0; i < 10; i++) {
+                const p = document.createElement('div');
+                p.className = 'fw-particle';
+                p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                p.style.left = posX + 'px';
+                p.style.top = posY + 'px';
+                
+                const angle = (i / 10) * Math.PI * 2;
+                const speed = Math.random() * 30 + 20; 
+                p.style.setProperty('--x', Math.cos(angle) * speed);
+                p.style.setProperty('--y', Math.sin(angle) * speed);
+                
+                document.body.appendChild(p);
+                setTimeout(() => { p.remove(); }, 600);
+            }
+        }
+
+        /* --- 2. MULTI NAVIGATION SYSTEM --- */
+        const music = document.getElementById('backsound');
+        function navigateTo(pageNumber) {
+            if(music.paused) music.play().catch(() => {});
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById('page' + pageNumber).classList.add('active');
+            if(pageNumber === 3) startTyping();
+        }
+
+        /* --- 3. RE-DESIGNED AESTHETIC COUNTDOWN + ANIMASI KADO TERBUKA --- */
+        function startAestheticCountdown() {
+            const gift = document.getElementById('mainGift');
+            const wrapper = document.getElementById('timerWrapper');
+            const timer = document.getElementById('giftTimer');
+            const hint = document.getElementById('giftHint');
+            
+            gift.style.pointerEvents = 'none';
+            hint.style.opacity = '0';
+            wrapper.classList.add('show');
+
+            let count = 3;
+            timer.innerText = count;
+
+            let interval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    timer.innerText = count;
+                } else {
+                    clearInterval(interval);
+                    
+                    // Trigger animasi membesar dan terbuka pada kado
+                    gift.innerText = "🔓"; 
+                    gift.classList.add('open-explode');
+
+                    // Pindah halaman dengan transisi halus sesaat setelah meledak terbuka
+                    setTimeout(() => {
+                        navigateTo(3);
+                        // Mengembalikan state semula setelah ditinggalkan
+                        setTimeout(() => {
+                            wrapper.classList.remove('show');
+                            gift.innerText = "🎁";
+                            gift.classList.remove('open-explode');
+                            gift.style.pointerEvents = 'auto';
+                        }, 600);
+                    }, 550);
+                }
+            }, 1000);
+        }
+
+        /* --- 4. TYPING EFFECT ANTI-POTONG KATA --- */
+        const loveLetterText = `Selamat ulang tahun, Sayangku! [emoji_heart_pink]\n\nHari ini adalah hari favorit aku di bumi, karena di hari inilah orang paling baik, paling cantik, dan paling berharga di hidup aku dilahirkan.\n\nTerima kasih ya sudah tumbuh menjadi pribadi yang luar biasa hebat. Terima kasih sudah mengisi hari-hariku dengan warna sakura yang ceria, penuh kehangatan, dan selalu menyenangkan.\n\nSemoga di umur baru ini kamu selalu diberikan kesehatan, kebahagiaan tanpa jeda, dan semua langkahmu dimudahkan oleh-Nya. I love you, today, tomorrow, and always. [emoji_sparkles]`;
+
+        const emojiAssets = {
+            '[emoji_heart_pink]': 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f495.svg', 
+            '[emoji_sparkles]': 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/2728.svg'      
+        };
+
+        let letterIndex = 0;
+        function startTyping() {
+            const typingArea = document.getElementById('typingArea');
+            const scrollBox = document.getElementById('scrollBox');
+            const nextBtn = document.getElementById('btnNextMemories');
+            
+            typingArea.innerHTML = "";
+            letterIndex = 0;
+            nextBtn.style.opacity = "0";
+            nextBtn.style.pointerEvents = "none";
+
+            function type() {
+                if (letterIndex < loveLetterText.length) {
+                    let remainingStr = loveLetterText.slice(letterIndex);
+                    let matchedEmoji = null;
+
+                    for (let key in emojiAssets) {
+                        if (remainingStr.startsWith(key)) {
+                            matchedEmoji = key;
+                            break;
+                        }
+                    }
+
+                    if (matchedEmoji) {
+                        const img = document.createElement('img');
+                        img.className = 'note-emoji';
+                        img.src = emojiAssets[matchedEmoji];
+                        typingArea.appendChild(img);
+                        letterIndex += matchedEmoji.length;
+                    } else {
+                        let currentChar = loveLetterText.charAt(letterIndex);
+                        if (currentChar === "\n") {
+                            typingArea.innerHTML += "<br>";
+                        } else {
+                            const span = document.createElement('span');
+                            span.className = 'joy-char';
+                            span.innerHTML = currentChar === " " ? "&nbsp;" : currentChar; 
+                            typingArea.appendChild(span);
+                        }
+                        letterIndex++;
+                    }
+                    
+                    scrollBox.scrollTop = scrollBox.scrollHeight;
+                    setTimeout(type, 40); 
+                } else {
+                    nextBtn.style.opacity = "1";
+                    nextBtn.style.pointerEvents = "auto";
+                }
+            }
+            type();
+        }
+
+        /* --- 5. PHOTO FLIP LOGIC --- */
+        function handlePolaroidClick(element, event) {
+            const isFlipped = element.classList.contains('magnified');
+            document.querySelectorAll('.polaroid-wrapper').forEach(card => {
+                card.classList.remove('magnified');
+            });
+
+            if (!isFlipped) {
+                element.classList.add('magnified');
+                createFlipSparkles(event.clientX, event.clientY);
+            }
+        }
+
+        function createFlipSparkles(clickX, clickY) {
+            const sparkleEmojis = ['✨', '🌸', '💖', '⭐'];
+            for(let i = 0; i < 6; i++) {
+                const sp = document.createElement('div');
+                sp.className = 'flip-sparkle';
+                sp.innerText = sparkleEmojis[Math.floor(Math.random() * sparkleEmojis.length)];
+                sp.style.left = clickX + 'px';
+                sp.style.top = clickY + 'px';
+                sp.style.setProperty('--x', (Math.random() * 120 - 60) + 'px');
+                sp.style.setProperty('--y', (Math.random() * 120 - 60) + 'px');
+                document.body.appendChild(sp);
+                setTimeout(() => { sp.remove(); }, 800);
+            }
+        }
+
+        /* --- 6. MUSIC CONTROLLER --- */
+        function toggleMusic() {
+            const btn = document.getElementById('musicBtn');
+            if (music.paused) { music.play(); btn.innerText = "🎵"; } 
+            else { music.pause(); btn.innerText = "🔇"; }
+        }
+
+        /* --- 7. MOUSE TRAIL --- */
+        const trailEmojis = ['🌸', '✨'];
+        window.addEventListener('mousemove', function(e) {
+            if(Math.random() > 0.25) return;
+            const trail = document.createElement('div');
+            trail.className = 'emoji-trail';
+            trail.innerText = trailEmojis[Math.floor(Math.random() * trailEmojis.length)];
+            trail.style.left = e.clientX + 'px';
+            trail.style.top = e.clientY + 'px';
+            document.body.appendChild(trail);
+            setTimeout(() => { trail.remove(); }, 1200);
+        });
+
+        /* --- 8. FLOATING RAIN EMOJI GENERATOR (Dari Paling Atas Layar) --- */
+        const rainElements = ['🌸', '💖', '✨', '🎈'];
+        setInterval(() => {
+            const emoji = document.createElement('div');
+            emoji.className = 'rain-emoji';
+            emoji.innerText = rainElements[Math.floor(Math.random() * rainElements.length)];
+            emoji.style.left = Math.random() * 100 + 'vw';
+            
+            // Variasi ukuran & kecepatan jatuh
+            const fontSize = Math.random() * 12 + 16 + 'px';
+            emoji.style.fontSize = fontSize;
+            emoji.style.animationDuration = Math.random() * 3 + 4 + 's'; 
+            
+            document.body.appendChild(emoji);
+            setTimeout(() => { emoji.remove(); }, 7000);
+        }, 200);
+    </script>
+</body>
+</html>
